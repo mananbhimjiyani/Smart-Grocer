@@ -1,0 +1,243 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.background-container {
+  background: url('images/blurred-shelves-with-food.jpg') center/cover no-repeat;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  text-align: center;
+  color: white;
+  max-width: 80%; /* Adjusted max-width for better responsiveness */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+h1 {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+p {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+form {
+  width: 100%; /* Ensure the form takes up the full width */
+  max-width: 400px; /* Adjusted max-width for better responsiveness */
+  margin: 0 auto; /* Center the form horizontally */
+}
+
+button {
+  padding: 14px 28px;
+  font-size: 20px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #3367d6;
+}
+
+.google-icon {
+  margin-right: 10px;
+}
+
+.timestamp-label,
+label {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.timestamp-input,
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+.sidebar.collapsed {
+  width: 60px; /* Set the collapsed width as per your design */
+}
+
+.sidebar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 20px;
+  transition: width 0.3s ease; /* Add a smooth transition effect */
+}
+
+.sidebar h2 {
+  color: #818181;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  padding: 15px;
+  text-align: center;
+  font-size: 18px;
+  color: #818181;
+  transition: 0.3s;
+}
+
+.sidebar li:hover {
+  background-color: #575757;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #818181;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #818181;
+}
+
+.bg-2 {
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+}
+
+.table-bordered {
+  border: 1px solid #dee2e6;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  text-align: center;
+}
+
+.table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+input:disabled {
+  background-color: #f2f2f2; /* Light gray background */
+  color: #666; /* Dark gray text color */
+  border: 1px solid #ccc; /* Light gray border */
+  cursor: not-allowed; /* Disabled cursor style */
+  opacity: 0.7; /* Reduce opacity for disabled appearance */
+}
+
+
+.btn-success {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.row {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.col-sm-8,
+.col-sm-4 {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.menu-heading{
+  margin-bottom: 20px;
+}
+
+
