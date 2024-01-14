@@ -7,17 +7,7 @@ import Sidebar from './Sidebar';
 import Dashboard from './Dashboard';
 import SignInPage from './SignInPage';
 import InventoryItems from "./InventoryItems";
-
-
-function Predictions() {
-    // Placeholder component for predictions
-    return (
-        <div>
-            <h2>Predictions</h2>
-            {/* Add your predictions content here */}
-        </div>
-    );
-}
+import Predictions from "./Prediction";
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(false);

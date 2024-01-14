@@ -1,12 +1,11 @@
-import {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 function InventoryItems() {
-    const [price, setPrice] = useState(0);
-    const [qty, setQty] = useState(0);
+    const [Item_MRP, set_Item_MRP] = useState(0);
+    const [Item_Weight, set_Item_Weight] = useState(0);
     const [total, setTotal] = useState(0);
     const [users, setUsers] = useState([]);
-    const [name, setName] = useState("");
-    const [sum, setSum] = useState("");
+    const [Item_Identifier, set_Item_Identifier] = useState("");
     const [updateIndex, setUpdateIndex] = useState(null);
 
     useEffect(() => {
@@ -16,120 +15,81 @@ function InventoryItems() {
 
     const fetchInventoryData = async () => {
         try {
-            const response = await fetch("http://localhost:3001/inventory");
+            const response = await fetch("http://127.0.0.1:5000/inventory");
+            console.log("Response from server:", response);
             const data = await response.json();
+            console.log("Data received from server:", data);
             setUsers(data);
         } catch (error) {
             console.error("Error fetching inventory data:", error);
         }
     };
 
-    const Calculation = () => {
-        if (!name || !price || !qty) {
+    const Calculation = async () => {
+        if (!Item_Identifier || !Item_MRP || !Item_Weight) {
             alert("Please fill in all required fields.");
             return;
         }
 
-        // Update the state using a callback to ensure the correct updated state
-        setUsers((prevUsers) => {
-            if (updateIndex !== null) {
-                // Update the existing item
-                const updatedUsers = [...prevUsers];
-                updatedUsers[updateIndex] = {name, qty, price, sum};
-                return updatedUsers;
-            } else {
-                // Add a new item
-                return [...prevUsers, {name, qty, price, sum}];
-            }
-        });
+        const requestData = {
+            Item_Identifier,
+            Item_Weight,
+            Item_MRP,
+        };
+
+        const requestOptions = {
+            method: updateIndex !== null ? "PUT" : "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        };
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/inventoryAddOrUpdate", requestOptions);
+            console.log("Response from server:", response);
+            const data = await response.json();
+            console.log("Data received from server:", data);
+            setUsers(data);
+        } catch (error) {
+            console.error("Error updating inventory data:", error);
+        }
+
+        // Clear input fields after calculation
+        set_Item_Identifier("");
+        set_Item_Weight(0);
+        set_Item_MRP(0);
+        setUpdateIndex(null);
     };
 
     useEffect(() => {
         // Calculate total after state is updated
-        const newTotal = users.reduce((acc, user) => acc + Number(user.sum), 0);
+        const newTotal = users.reduce((acc, user) => acc + Number(user.Item_MRP) * Number(user.Item_Weight), 0);
         setTotal(newTotal);
-
-        // Send data to the server
-        sendDataToServer();
-    }, [users]); // useEffect dependency on users
+    }, [users]);
 
     const handleUpdate = (index) => {
         // Set the values of the selected item for update
         const selectedItem = users[index];
-        setName(selectedItem.name);
-        setQty(selectedItem.qty);
-        setPrice(selectedItem.price);
-        setSum(selectedItem.sum);
+        set_Item_Identifier(selectedItem.Item_Identifier);
+        set_Item_Weight(selectedItem.Item_Weight);
+        set_Item_MRP(selectedItem.Item_MRP);
         setUpdateIndex(index);
     };
 
-// Adjust sendDataToServer function
-    const sendDataToServer = async () => {
-        try {
-            const endpoint = updateIndex !== null ? `http://localhost:3001/inventory/${updateIndex}` : "http://localhost:3001/inventory";
-            const method = updateIndex !== null ? "PUT" : "POST";
-
-            console.log("Sending data to:", endpoint);
-
-            const response = await fetch(endpoint, {
-                method,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({name, qty, price, sum}),
-            });
-
-            console.log("Server response:", response);
-
-            if (response.ok) {
-                console.log("Data sent successfully!");
-            } else {
-                console.error("Failed to send data to the server.");
-            }
-        } catch (error) {
-            console.error("Error sending data to the server:", error);
-        }
-    };
-
-    const handlePriceChange = (e) => {
-        const newPrice = parseFloat(e.target.value);
-        if (!isNaN(newPrice)) {
-            setPrice(newPrice);
-            calculateTotal(newPrice, qty);
-        }
-    };
-
-    const handleQuantityChange = (e) => {
-        const newQuantity = parseInt(e.target.value);
-        if (!isNaN(newQuantity)) {
-            setQty(newQuantity);
-            calculateTotal(price, newQuantity);
-        }
-    };
-
-    const calculateTotal = (price, qty) => {
-        const newTotal = price * qty;
-        setSum(newTotal);
-    };
-
-    function refreshPage() {
-        window.location.reload();
-    }
-
     return (
-        <div className={"container"}>
+        <div className={"container"} style={{ maxHeight: "500px", overflowY: "auto" }}>
             <div className="container-fluid bg-2 text-center">
                 <h1>Inventory Management System React</h1>
-                <br/>
+                <br />
                 <div className="row">
                     <div className="col-sm-8">
                         <table className="table table-bordered">
                             <h3 align="left"> Add Products </h3>
                             <tr>
                                 <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                                <th>Amount</th>
+                                <th>Item MRP</th>
+                                <th>Item Weight</th>
                                 <th>Option</th>
                             </tr>
                             <tr>
@@ -138,39 +98,30 @@ function InventoryItems() {
                                         type="text"
                                         className="form-control"
                                         placeholder="Item Name"
-                                        value={name}
+                                        value={Item_Identifier}
                                         onChange={(event) => {
-                                            setName(event.target.value);
+                                            set_Item_Identifier(event.target.value);
                                         }}
                                     />
                                 </td>
                                 <td>
                                     <input
-                                        type="text"
+                                        type="number"
+                                        step="0.01"
                                         className="form-control"
-                                        placeholder="Enter Price"
-                                        value={price}
-                                        onChange={handlePriceChange}
+                                        placeholder="Enter Item_MRP"
+                                        value={Item_MRP}
+                                        onChange={(e) => set_Item_MRP(parseFloat(e.target.value) || 0)}
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="number"
+                                        step="0.01"
                                         className="form-control"
-                                        placeholder="Enter Qty"
-                                        value={qty}
-                                        onChange={handleQuantityChange}
-                                    />
-                                </td>
-                                <td>
-                                    <input
-                                        type="text"
-                                        value={sum}
-                                        className="form-control"
-                                        placeholder="Enter Total"
-                                        id="total_cost"
-                                        name="total_cost"
-                                        disabled
+                                        placeholder="Enter Item_Weight"
+                                        value={Item_Weight}
+                                        onChange={(e) => set_Item_Weight(parseFloat(e.target.value) || 0)}
                                     />
                                 </td>
                                 <td>
@@ -189,19 +140,17 @@ function InventoryItems() {
                             <thead>
                             <tr>
                                 <th>Item Name</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                                <th>Amount</th>
+                                <th>Item_MRP</th>
+                                <th>Item_Weight</th>
                                 <th>Options</th>
                             </tr>
                             </thead>
                             <tbody>
                             {users.map((row, index) => (
                                 <tr key={index}>
-                                    <td>{row.name}</td>
-                                    <td>{row.price}</td>
-                                    <td>{row.qty}</td>
-                                    <td>{row.sum}</td>
+                                    <td>{row.Item_Identifier}</td>
+                                    <td>{row.Item_MRP}</td>
+                                    <td>{row.Item_Weight}</td>
                                     <td>
                                         <button
                                             className="btn btn-primary"
@@ -214,27 +163,6 @@ function InventoryItems() {
                             ))}
                             </tbody>
                         </table>
-                    </div>
-                    <div className="col-sm-4">
-                        <div className="form-group" align="left">
-                            <h3>Total</h3>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Total"
-                                required
-                                disabled
-                                value={total}
-                            />
-                            <br/>
-                            <button
-                                type="button"
-                                className="btn btn-success"
-                                onClick={refreshPage}
-                            >
-                                <span>Complete</span>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
